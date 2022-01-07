@@ -1,0 +1,167 @@
+.size(@w, @h) {
+  width: @w;
+  height: @h;
+}
+
+.fj(@jc) {
+  display: flex;
+  justify-content: @jc;
+}
+
+.fa(@ai) {
+  display: flex;
+  align-items: @ai;
+}
+
+.flex(@jc, @ai) {
+  display: flex;
+  justify-content: @jc;
+  align-items: @ai;
+}
+
+// 适配主流设备
+@deviceList: 240px, 320px, 360px, 375px, 384px, 400px, 411px, 414px, 424px, 480px, 540px, 640px, 720px, 750px, 768px, 800px, 1024px, 1920px, 2048px;
+// 预设基准值
+@baseFontSize: 25px;
+// 设计稿尺寸
+@psdWidth: 375px;
+
+// 移动端适配
+.adapterMixin(@index: 1) when (@index <=length(@deviceList)) {
+  @media (min-width: extract(@deviceList, @index)) {
+    html {
+      font-size: @baseFontSize / @psdWidth * extract(@deviceList, @index);
+    }
+  }
+
+  .adapterMixin(@index + 1);
+}
+
+@fontsizeList: 12px, 14px, 15px, 16px, 20px, 22px, 24px, 25px, 26px, 28px, 32px;
+
+// 生成字体大小类
+.createFontSize(@index: 1) when (@index <=length(@fontsizeList)) {
+  @name : unit(extract(@fontsizeList , @index));
+  @size: unit(extract(@fontsizeList, @index) / @baseFontSize, rem);
+
+  .tx-@{name} {
+    font-size: @size;
+  }
+
+  .createFontSize(@index + 1);
+}
+
+@lineheightList: 12px, 14px, 15px, 16px, 18px, 20px, 21px, 22px, 24px, 25px, 26px, 28px, 32px;
+
+// 生成行高类
+.createLineHeight(@index: 1) when (@index <=length(@lineheightList)) {
+  @name : unit(extract(@lineheightList , @index));
+  @size: unit(extract(@lineheightList, @index) / @baseFontSize, rem);
+
+  .line-h@{name} {
+    line-height: @size;
+  }
+
+  .createLineHeight(@index + 1);
+}
+
+@pdTList: 5px, 6px, 8px, 10px, 11px, 12px, 15px, 16px, 20px, 30px, 37px, 40px, 45px, 50px, 75px, 100px;
+
+// 生成padding-top类
+.createPaddingTop(@index: 1) when (@index <=length(@pdTList)) {
+  @name : unit(extract(@pdTList , @index));
+  @size: unit(extract(@pdTList, @index) / @baseFontSize, rem);
+
+  .pd-t-@{name} {
+    padding-top: @size;
+  }
+
+  .createPaddingTop(@index + 1);
+}
+
+@pdBList: 8px, 14px, 15px, 20px;
+
+// 生成padding-bottom类
+.createPaddingBottom(@index: 1) when (@index <=length(@pdBList)) {
+  @name : unit(extract(@pdBList , @index));
+  @size: unit(extract(@pdBList, @index) / @baseFontSize, rem);
+
+  .pd-b-@{name} {
+    padding-bottom: @size;
+  }
+
+  .createPaddingBottom(@index + 1);
+}
+
+@pdLList: 4px, 6px, 8px, 10px;
+
+// 生成padding-left类
+.createPaddingLeft(@index: 1) when (@index <=length(@pdLList)) {
+  @name : unit(extract(@pdLList , @index));
+  @size: unit(extract(@pdLList, @index) / @baseFontSize, rem);
+
+  .pd-l-@{name} {
+    padding-left: @size;
+  }
+
+  .createPaddingLeft(@index + 1);
+}
+
+// @pdRList: ;
+
+// // 生成padding-right类
+// .createPaddingRight(@index: 1) when (@index <=length(@pdRList)) {
+//   @name : unit(extract(@pdRList , @index));
+//   @size: unit(extract(@pdRList, @index) / @baseFontSize, rem);
+
+//   .pd-r-@{name} {
+//     padding-right: @size;
+//   }
+
+//   .createPaddingRight(@index + 1);
+// }
+
+@pdXList: 6px, 7px, 8px, 10px, 16px, 20px, 30px, 40px;
+
+// 生成padding-left和padding-right类
+.createPaddingX(@index: 1) when (@index <=length(@pdXList)) {
+  @name : unit(extract(@pdXList , @index));
+  @size: unit(extract(@pdXList, @index) / @baseFontSize, rem);
+
+  .pd-x-@{name} {
+    padding-left: @size;
+    padding-right: @size;
+  }
+
+  .createPaddingX(@index + 1);
+}
+
+
+@pdYList: 2px, 4px, 5px, 6px, 8px, 10px, 15px, 16px, 20px, 25px;
+
+// 生成padding-top和padding-bottom类
+.createPaddingY(@index: 1) when (@index <=length(@pdYList)) {
+  @name : unit(extract(@pdYList , @index));
+  @size: unit(extract(@pdYList, @index) / @baseFontSize, rem);
+
+  .pd-y-@{name} {
+    padding-top: @size;
+    padding-bottom: @size;
+  }
+
+  .createPaddingY(@index + 1);
+}
+
+@pdList: 16px;
+
+// 生成padding类
+.createPadding(@index: 1) when (@index <=length(@pdList)) {
+  @name : unit(extract(@pdList , @index));
+  @size: unit(extract(@pdList, @index) / @baseFontSize, rem);
+
+  .pd-@{name} {
+    padding: @size;
+  }
+
+  .createPadding(@index + 1);
+}
