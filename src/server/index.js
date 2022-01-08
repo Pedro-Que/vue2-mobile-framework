@@ -7,7 +7,7 @@ import { Toast } from 'vant'
 // 创建一个主要的请求体
 const fetch = axios.create({
   baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_ENV === 'test' ? process.env.VUE_APP_TEST_BASEURL : process.env.VUE_APP_PROD_BASEURL : '',
-  timeout: 8000,
+  timeout: 8000
 })
 
 // post请求头
@@ -23,7 +23,7 @@ fetch.interceptors.request.use(
     }
     // token验证
     if (store.state.user.token) {
-      config.headers.Authorization = `Bearer ${store.state.user.token}`
+      config.headers.Authorization = store.state.user.token
     }
     return config
   },
@@ -31,7 +31,7 @@ fetch.interceptors.request.use(
     store.commit('server/SETLOADING', false)
     return Promise.error(error)
   }
-);
+)
 
 // 响应拦截器
 fetch.interceptors.response.use(
@@ -63,46 +63,28 @@ fetch.interceptors.response.use(
     store.commit('server/SETLOADING', false)
     return Promise.reject(error)
   }
-);
+)
 
 /**
- * @method 封装url传参的请求方法
- * @param {string} url - 路径
- * @param {String} method - 请求方式,get和post居多
- * @param {any} params - 传递的参数
+ * @method 附件上传
+ * @param {string} url
+ * @param {Object} params
  */
-const get = async (url, method, params) => {
-  const res = await fetch(url, {
-    method: method,
-    params: params,
-    // 负责序列化`params`的可选函数
-    paramsSerializer: function (params) {
-      return QS.stringify(params, { arrayFormat: 'brackets' })
+export const upload = async (url, params) => {
+  const res = await fetch.post(url, params, {
+    timeout: 20000,
+    headers: {
+      "Content-Type": "multipart/form-data"
     }
   }).catch(err => {
-    store.commit('server/SETLOADING', false)
-    if (!err.response) {
-      Toast.fail('网络错误')
-    }
     return Promise.reject(err.response ? err.response.data : undefined)
   })
-  return Promise.resolve(res.data)
-}
-
-/**
- * @method 封装post请求
- * @param {String} url - 路径
- * @param {Object} params - 传递的参数
- */
-const post = async (url, params) => {
-  const res = await fetch.post(url, params).catch(err => {
-    store.commit('server/SETLOADING', false)
-    if (!err.response) {
-      Toast.fail('网络错误')
-    }
-    return Promise.reject(err.response ? err.response.data : undefined)
-  })
-  return Promise.resolve(res.data)
+  const r = res.data || {}
+  if (r.ErrorCode == "1002") {
+    const url = window.location.hash.replace(/^#/, '')
+    userFailure(url)
+  }
+  return Promise.resolve(r)
 }
 
 /**
@@ -123,39 +105,51 @@ export const upload = async (url, params) => {
     }
     return Promise.reject(err.response ? err.response.data : undefined)
   })
-  return Promise.resolve(res.data)
+  const r = res.data || {}
+  if (r.code == 401) {
+    Toast(r.msg)
+    store.commit('user/LOGOUT')
+    router.replace('/login')
+    return Promise.reject(r)
+  }
+  return Promise.resolve(r)
 }
 
 /**
- * @method 请求方法
- * @param {String} url - 路径
+ * @method 封装请求方法
+ * @param {string} url - 路径
  * @param {String} method - 请求方式
- * @param {Object} params - 传递的参数
+ * @param {Object} data - 传递的参数
+ * @param {any} data.params - 传递的参数
+ * @param {any} data.body - 传递的参数
  */
-export default async (url, method, params = {}) => {
-  let res = {}
-  if (method == 'GET') {
-    res = await get(url, method, params)
-  } else if (method == 'POST') {
-    res = await post(url, params)
+ export default async (url, method, data = {}) => {
+  const { params, body } = data
+  let config = {
+    method: method
   }
-  if (res.code == 401) {
-    res = await post(`/api/refresh/${store.state.user.refreshToken}`, params)
-    if (res.code == 200) {
-      const r = res.data || {}
-      store.commit('user/SETTOKEN', r.token)
-      store.commit('user/SETREFRESH_TOKEN', r.refreshToken)
-    } else if (res.code == 401 || res.code == 500) {
-      Toast(res.msg)
-      store.commit('user/LOGOUT')
-      router.replace('/login')
-      return Promise.reject(res)
+  if (params) {
+    config.params = params
+    // 负责序列化`params`的可选函数
+    config.paramsSerializer = (params) => {
+      return QS.stringify(params, { arrayFormat: 'brackets' })
     }
-    if (method == 'GET') {
-      res = await get(url, method, params)
-    } else if (method == 'POST') {
-      res = await post(url, params)
-    }
+  } else if (body) {
+    config.data = body
   }
-  return Promise.resolve(res)
+  const res = await fetch(url, config).catch(err => {
+    store.commit('server/SETLOADING', false)
+    if (!err.response) {
+      Toast.fail('网络错误')
+    }
+    return Promise.reject(err.response ? err.response.data : undefined)
+  })
+  const r = res.data || {}
+  if (r.code == 401) {
+    Toast(r.msg)
+    store.commit('user/LOGOUT')
+    router.replace('/login')
+    return Promise.reject(r)
+  }
+  return Promise.resolve(r)
 }

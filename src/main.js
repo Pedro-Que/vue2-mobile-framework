@@ -2,7 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import i18n from '@i18n/index'
 import { getModule } from '@utils/index'
+
+// 监听窗口的变化改变程序中默认字体大小
+window.onresize = () => {
+  let htmlArr = window.getComputedStyle(window.document.documentElement)
+  let fontSize = htmlArr['font-size'].replace(/px/g, '')
+  store.commit('app/SETFONT_SIZE', fontSize)
+}
 
 if (process.env.VUE_APP_GLOBAL_COMPONENT) {
   // 获取component文件夹下所有的组件
@@ -22,11 +30,11 @@ if (process.env.VUE_APP_GLOBAL_DIRECTIVE) {
   }
 }
 
-
 Vue.config.productionTip = false
 
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount('#app')

@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@directive/*": [
+        "src/directive/*"
+      ],
+      "@i18n/*": [
+        "src/i18n/*"
+      ],
+      "@router/*": [
+        "src/router/*"
+      ],
+      "@server/*": [
+        "src/server/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@ui/*": [
+        "src/ui/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@views/*": [
+        "src/views/*"
+      ]
+    },
+    "target": "ES6",
+    "module": "commonjs",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
