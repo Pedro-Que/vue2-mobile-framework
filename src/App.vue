@@ -1,8 +1,25 @@
 <template>
   <div id="app">
     <router-view />
+    <Loading :show="showLoading"></Loading>
   </div>
 </template>
+
+<script>
+import { mapState } from "vuex";
+
+export default {
+  computed: {
+    ...mapState("server", {
+      loading: (state) => state.loading,
+      isLoading: (state) => state.isLoading,
+    }),
+    showLoading() {
+      return this.loading && this.isLoading;
+    },
+  },
+};
+</script>
 
 <style lang="less">
 * {

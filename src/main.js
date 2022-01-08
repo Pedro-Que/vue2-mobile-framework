@@ -2,8 +2,14 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import i18n from '@i18n/index'
+import i18n from './i18n'
+import vant from './vant'
 import { getModule } from '@utils/index'
+
+// 引用vant里面的组件
+vant.forEach(v => {
+  Vue.use(v)
+})
 
 // 监听窗口的变化改变程序中默认字体大小
 window.onresize = () => {
