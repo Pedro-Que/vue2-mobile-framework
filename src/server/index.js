@@ -77,28 +77,6 @@ export const upload = async (url, params) => {
       "Content-Type": "multipart/form-data"
     }
   }).catch(err => {
-    return Promise.reject(err.response ? err.response.data : undefined)
-  })
-  const r = res.data || {}
-  if (r.ErrorCode == "1002") {
-    const url = window.location.hash.replace(/^#/, '')
-    userFailure(url)
-  }
-  return Promise.resolve(r)
-}
-
-/**
- * @method 附件上传
- * @param {string} url
- * @param {Object} params
- */
-export const upload = async (url, params) => {
-  const res = await fetch.post(url, params, {
-    timeout: 20000,
-    headers: {
-      "Content-Type": "multipart/form-data"
-    }
-  }).catch(err => {
     store.commit('server/SETLOADING', false)
     if (!err.response) {
       Toast.fail('网络错误')

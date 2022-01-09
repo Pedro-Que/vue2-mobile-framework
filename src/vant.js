@@ -1,3 +1,3 @@
-import { Overlay, Loading } from 'vant'
+import { Overlay, Loading, Form, Field, Button, Toast } from 'vant'
 
-export default [Overlay, Loading]
+export default [Overlay, Loading, Form, Field, Button, Toast]
