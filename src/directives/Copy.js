@@ -1,9 +1,9 @@
 import { Toast } from 'vant'
 
 /**
- * 点击复制
+ * @method 点击复制指令
  */
-export default {
+const Copy = {
   bind(el, { value }) {
     el.$value = value
     el.handler = () => {
@@ -40,3 +40,5 @@ export default {
     el.removeEventListener('click', el.handler)
   },
 }
+
+export default Copy

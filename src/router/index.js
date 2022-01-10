@@ -49,8 +49,11 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  // 设置当前页面的title信息
   setTitle(i18n.t(to.meta.title))
+  // 判断当前路由是否需要token验证
   if (to.meta.jwt) {
+    // 判断token信息是否存在，不存在则跳转到登录页
     if (store.state.user.token) {
       next()
     } else {

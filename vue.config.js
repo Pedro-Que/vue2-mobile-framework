@@ -6,9 +6,11 @@ function resolve(dir) {
 }
 
 module.exports = {
+  // 部署应用包时的基本URL
   publicPath: process.env.VUE_APP_PATH,
   // 去掉.map文件
   productionSourceMap: false,
+  // 简单的配置方式
   configureWebpack: config => {
     // 配置打包的进度条
     config.plugins.push(
@@ -18,6 +20,7 @@ module.exports = {
       })
     )
   },
+  // 允许对内部的 webpack 配置进行更细粒度的修改
   chainWebpack: config => {
     // 定义一些别名
     config.resolve.alias.set('@', resolve('src'))
@@ -36,6 +39,7 @@ module.exports = {
     types.forEach(type => addStyleResource(config.module.rule('less').oneOf(type)));
   },
   devServer: {
+    // API 请求代理
     proxy: {
       '/api': {
         target: process.env.VUE_APP_DEV_BASEURL,

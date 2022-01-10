@@ -1,5 +1,5 @@
 /**
- * 修改页面title
+ * @method 修改页面title
  * @param {String} title
  */
 export const setTitle = title => {

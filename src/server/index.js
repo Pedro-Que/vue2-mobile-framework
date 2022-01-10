@@ -4,14 +4,25 @@ import router from '@router/index'
 import store from '@store/index'
 import { Toast } from 'vant'
 
+let baseURL = ''
+// 判断是否为production模式
+if (process.env.NODE_ENV === 'production') {
+  // 判断是否为测试打包，是则读取测试环境url地址，反之读取正式环境url地址
+  baseURL = process.env.VUE_APP_ENV === 'test' ? process.env.VUE_APP_TEST_BASEURL : process.env.VUE_APP_PROD_BASEURL
+}
+
 // 创建一个主要的请求体
 const fetch = axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_ENV === 'test' ? process.env.VUE_APP_TEST_BASEURL : process.env.VUE_APP_PROD_BASEURL : '',
+  // 设置请求地址前默认的url地址
+  baseURL: baseURL,
+  // 设置超时时间
   timeout: 8000
 })
 
 // post请求头
 fetch.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
+// 设置请求头里面的语言信息
+fetch.defaults.headers.common['Accept-Language'] = store.state.app.lang
 
 // 请求拦截器
 fetch.interceptors.request.use(
@@ -101,7 +112,7 @@ export const upload = async (url, params) => {
  * @param {any} data.params - 传递的参数
  * @param {any} data.body - 传递的参数
  */
- export default async (url, method, data = {}) => {
+export default async (url, method, data = {}) => {
   const { params, body } = data
   let config = {
     method: method
