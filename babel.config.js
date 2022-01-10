@@ -4,7 +4,7 @@ let config = {
   ]
 }
 
-if (process.env.VUE_APP_DEMAND) {
+if (JSON.parse(process.env.VUE_APP_DEMAND)) {
   config.plugins = [
     ['import', {
       libraryName: 'vant',
