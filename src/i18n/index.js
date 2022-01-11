@@ -6,15 +6,25 @@ Vue.use(VueI18n)
 // 从store里面获取默认语言
 const lang = store.state.app.lang
 
+let messages = {}
+// 读取配置，判断是否开启延迟加载翻译文件
+if (JSON.parse(process.env.VUE_APP_I18N)) {
+  messages[lang] = require(`./${lang}.js`).default
+} else {
+  // 如果没有开启，则读取项目中配置的语言数组
+  const langs = process.env.VUE_APP_LANGUAGE?.split('|')
+  langs.forEach(lang => {
+    messages[lang] = require(`./${lang}.js`).default
+  })
+}
+
 // 创建i18n实例
 const i18n = new VueI18n({
   // 设置语言环境
   locale: lang,
   fallbackLocale: lang,
   // 设置语言环境信息
-  messages: {
-    [lang]: require(`./${lang}.js`).default
-  }
+  messages
 })
 
 // 我们的预装默认语言
