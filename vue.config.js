@@ -8,6 +8,7 @@ function resolve(dir) {
 module.exports = {
   // 部署应用包时的基本URL
   publicPath: process.env.VUE_APP_PATH,
+  outputDir: 'docs',
   // 去掉.map文件
   productionSourceMap: false,
   // 简单的配置方式
